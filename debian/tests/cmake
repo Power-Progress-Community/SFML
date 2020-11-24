@@ -1,0 +1,23 @@
+#!/bin/sh
+# autopkgtest check: Build and run a simple program against SFML
+
+set -e
+
+# Require $ADTTMP for temporary build files
+if [ -z "$ADTTMP" ]
+then
+	echo "Required envvar \"$ADTTMP\"is not set" >&2
+	exit 1
+fi
+
+cp debian/tests/CMakeLists.txt debian/tests/sfml_test.cpp "$ADTTMP"
+cd "$ADTTMP"
+
+# Run CMake and build program
+CFLAGS='-Wall -Werror' cmake .
+make VERBOSE=1
+echo "build: OK"
+
+# Run it
+./sfml_test
+echo "run: OK"
